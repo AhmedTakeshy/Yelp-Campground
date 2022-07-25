@@ -46,16 +46,18 @@ app.use(mongoSanitize(
     }
 ));
 
+const secret = process.env.SECRET;
+
 const store = MongoStore.create({
     mongoUrl: 'mongodb://localhost:27017/yelp-camp',
-    secret: "thisshouldbebettersecret!",
+    secret,
     touchAfter: 24 * 3600,
 });
 
 const sessionConfig = {
     store,
     name: "sxtmz",
-    secret: "thisshouldbebettersecret!",
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -183,6 +185,11 @@ app.use((err, req, res, next) => {
 
 
 
-app.listen(3000, () => {
-    console.log('Serving on port 3000')
-})
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+app.listen(port, function() {
+  console.log("Server started on port 3000");
+});
