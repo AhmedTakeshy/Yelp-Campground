@@ -165,7 +165,6 @@ app.get('/auth/google/campgrounds',
 
 app.get('/', (req, res) => {
     res.render('campgrounds/home')
-    console.log(res.locals);
 });
 
 
