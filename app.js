@@ -22,8 +22,7 @@ const reviewRoutes = require("./routes/reviews")
 
 const dbUrl = process.env.DB_ATLAS;
 
-mongoose.connect(dbUrl, {
-});
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -132,7 +131,7 @@ app.use((req, res, next) => {
     if (!["/login", "/"].includes(req.originalUrl)) {
         req.session.redirect = req.originalUrl;
     }
-    res.locals.currentUser = req.user;
+    res.locals.user = req.user;
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
     next()
