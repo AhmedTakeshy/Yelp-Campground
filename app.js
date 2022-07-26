@@ -22,7 +22,8 @@ const reviewRoutes = require("./routes/reviews")
 
 const dbUrl = process.env.DB_ATLAS;
 
-mongoose.connect(dbUrl);
+mongoose.connect(dbUrl, {
+});
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -125,18 +126,6 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
-
-app.use((req, res, next) => {
-    if (!["/login", "/"].includes(req.originalUrl)) {
-        req.session.redirect = req.originalUrl;
-    }
-    res.locals.user = req.user;
-    res.locals.success = req.flash("success")
-    res.locals.error = req.flash("error")
-    next()
-})
-
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
@@ -160,10 +149,18 @@ app.get('/auth/google/campgrounds',
     req.flash("success", `Welcome back, ${username}!`);
     const redirectUrl = req.session.redirect || "/campgrounds"
     res.redirect(redirectUrl);
-  });
+    });
+  
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash("success")
+    res.locals.error = req.flash("error")
+    next()
+})    
 
 app.get('/', (req, res) => {
-    res.render('campgrounds/home')
+    let currentUser = req.user;
+    res.render('campgrounds/home', { currentUser });
 });
 
 
