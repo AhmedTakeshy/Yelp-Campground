@@ -15,7 +15,6 @@ const helmet = require("helmet");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const MongoStore = require('connect-mongo');
 const User = require("./models/user");
-
 const userRoutes = require("./routes/users")
 const campgroundRoutes = require("./routes/campgrounds")
 const reviewRoutes = require("./routes/reviews")
@@ -33,7 +32,6 @@ db.once("open", () => {
 
 const app = express();
 app.engine("ejs", ejsMate)
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -49,7 +47,7 @@ app.use(mongoSanitize(
 const secret = process.env.SECRET;
 
 const store = MongoStore.create({
-    mongoUrl: 'mongodb://localhost:27017/yelp-camp',
+    mongoUrl: "mongodb://localhost:27017/yelp-camp",
     secret,
     touchAfter: 24 * 3600,
 });
@@ -120,11 +118,17 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 passport.use(User.createStrategy());
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash("success")
+    res.locals.error = req.flash("error")
+    next()
+}) 
 
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
@@ -151,16 +155,10 @@ app.get('/auth/google/campgrounds',
     res.redirect(redirectUrl);
     });
   
-app.use((req, res, next) => {
-    res.locals.currentUser = req.user;
-    res.locals.success = req.flash("success")
-    res.locals.error = req.flash("error")
-    next()
-})    
+   
 
 app.get('/', (req, res) => {
-    let currentUser = req.user;
-    res.render('campgrounds/home', { currentUser });
+    res.render('campgrounds/home');
 });
 
 
