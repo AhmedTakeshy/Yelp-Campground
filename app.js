@@ -47,7 +47,7 @@ app.use(mongoSanitize(
 const secret = process.env.SECRET;
 
 const store = MongoStore.create({
-    mongoUrl: "mongodb://localhost:27017/yelp-camp",
+    mongoUrl: dbUrl,
     secret,
     touchAfter: 24 * 3600,
 });
@@ -156,15 +156,14 @@ app.get('/auth/google/campgrounds',
     });
   
    
+app.use("/", userRoutes);
+app.use("/campgrounds", campgroundRoutes);
+app.use("/campgrounds/:id/reviews", reviewRoutes);
+
 
 app.get('/', (req, res) => {
     res.render('campgrounds/home');
 });
-
-
-app.use("/", userRoutes);
-app.use("/campgrounds", campgroundRoutes);
-app.use("/campgrounds/:id/reviews", reviewRoutes);
 
 
 app.all("*", (req, res, next) => {
