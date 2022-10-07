@@ -15,7 +15,7 @@
 
 ## Overview
 
-### The challenge
+### Project goal
 
 Users should be able to:
 
