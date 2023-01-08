@@ -9,10 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "build": "npm run build:client && npm run build:server",
-    "build:client": "webpack --config webpack.prod.js",
-    "build:server": "babel src --out-dir dist --ignore *.test.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
