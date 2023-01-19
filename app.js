@@ -133,7 +133,7 @@ app.use((req, res, next) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://yelp-campground0.herokuapp.com/auth/google/campgrounds"
+    callbackURL: "https://yelp-campground.vercel.app/auth/google/campgrounds"
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ googleId: profile.id, username: profile.displayName, email: profile.emails[0].value }, function (err, user) {
